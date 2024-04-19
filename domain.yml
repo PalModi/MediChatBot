@@ -1,0 +1,50 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - lab_tests
+  - test_type
+  - test_further_type
+  - language
+  - Appointment_booking
+  - visit_type
+
+responses:
+  utter_greet:
+  - text: "Hey! How are you? in which language would you like to have conversation?🤔"
+    buttons:
+    - title: ENGLISH
+      payload: english
+    - title: HINDI
+      payload: hindi
+    - title: GUJARATI
+      payload: gujarati   
+  utter_goodbye:
+  - text: "Bye"
+  utter_test_type: 
+  - text: ""
+    buttons:
+    - title: 🩸Blood-Tests બ્લડટેસ્ટ ब्लड-टेस्ट
+      payload: blood-test
+    - title: 💧Urine-Tests પેશાબ-પરીક્ષણ मूत्र-परीक्षण
+      payload: urine-test
+    - title: 📷Imaging-Tests ઇમેજિંગ-ટેસ્ટ इमेजिंग-परीक्षण
+      payload: imaging-test
+  utter_hold_on:
+  - text: To be continued        
+
+actions:
+- action_further_test_type
+- action_select_language
+- action_test_type
+- action_display_card
+- action_ask_visit
+- utter_hold_on
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+

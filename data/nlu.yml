@@ -1,0 +1,81 @@
+version: "3.1"
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - hey there
+    - good afternoon
+- intent: goodbye
+  examples: |
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
+- intent: affirm
+  examples: |
+    - yes
+    - y
+    - indeed
+    - of course
+    - that sounds good
+    - correct
+- intent: deny
+  examples: |
+    - no
+    - n
+    - never
+    - I don't think so
+    - don't like that
+    - no way
+    - not really
+- intent: language
+  examples: |
+    - english
+    - hindi
+    - gujarati
+- intent: lab_tests
+  examples: |
+    - ટેસ્ટ
+    - મને કેટલાક પરીક્ષણો બતાવો?
+    - टेस्ट
+    - टेस्ट दिखाओ मुझे"
+    - aur test kya hai?
+    - tests?
+    - test?
+
+- intent: test_type
+  examples: |
+    - blood-test
+    - urine-test
+    - imaging-test
+- intent: test_further_type
+  examples: |
+    - cbc
+    - rbc
+    - RE
+    - REA
+    - mri
+    - xray
+
+- intent: Appointment_booking
+  examples: |
+    - Appointment booking 
+    - Booking of appointment
+    - अपॉइंटमेंट बुकिंग
+    - એપોઇન્ટમેન્ટ બુકિંગ
+
+- intent: visit_type
+  examples: |
+    - homevisit
+    - labvisit

@@ -1,0 +1,28 @@
+version: "3.1"
+
+stories:
+
+- story: happy path
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: language
+  - action: action_select_language
+  # - intent: user_query_intent
+
+
+- story: Asking for medical-tests information
+  steps:
+  - intent: lab_tests
+  - action: action_test_type
+  - intent: test_type
+  - action: action_further_test_type
+  - intent: test_further_type
+  - action: action_display_card
+
+- story: Asking for appointment booking
+  steps:
+  - intent: Appointment_booking
+  - action: action_ask_visit
+  - intent: visit_type
+  - action: utter_hold_on  
