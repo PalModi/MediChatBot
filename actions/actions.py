@@ -177,7 +177,7 @@ class SelectLanguageText(Action):
         db = mc.connect(
             host="localhost",
             user="root",
-            password="Kutub@123",
+            password="",
             database="medichat"
         )
         cursor = db.cursor()
