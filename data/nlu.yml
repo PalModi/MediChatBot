@@ -79,3 +79,44 @@ nlu:
   examples: |
     - homevisit
     - labvisit
+
+- intent: date_query
+  examples: |
+    - 01-02-2023
+    - 03-01-2024
+    - 12-05-2025
+    - 07-08-2026
+
+- intent: time_query
+  examples: |
+    - [13:00:00](Time)
+    - [14:30:00](Time)
+    - [15:23:00](Time)
+
+- intent: information_Name
+  examples: |
+    - my name is [kutbuddin](Name)
+    - [pal](Name)
+    - [anushka](Name)
+    - [ali](Name)
+    - [salim](Name)
+    - [kutbuddin](Name)
+    - [bhavik](Name)
+
+- intent: information_Number
+  examples: |
+    - my number is [1234567890](PhoneNumber)
+    - call me at [1234567890](PhoneNumber)
+    - my phone number is [+91-1234567890](PhoneNumber)
+    - [+1-9723427728](PhoneNumber)
+
+- intent: information_address
+  examples: |
+    - My address is [123 Main Street, Cityville](Address)
+    - I live at [456 Park Avenue, Townsville](Address)
+    - Address: [789 Oak Lane, Villageton](Address)
+    - [1001 Elm Street, Suburbia](Address)
+    - [22B Baker Street, London](Address)
+    - [42 Wallaby Way, Sydney](Address)
+    - [221B Baker Street, London](Address)
+    - [1234 Pine Street, Greenvale](Address)    

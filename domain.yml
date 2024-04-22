@@ -11,6 +11,42 @@ intents:
   - language
   - Appointment_booking
   - visit_type
+  - date_query
+  - time_query
+  - information_Name
+  - information_Number
+  - information_address
+
+entities:
+- Name
+- PhoneNumber
+- Address
+- Time
+slots:
+  Name:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: Name
+  PhoneNumber:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: PhoneNumber
+  Address:
+    type: list
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: Address
+  Time:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: Time    
 
 responses:
   utter_greet:
@@ -21,7 +57,13 @@ responses:
     - title: HINDI
       payload: hindi
     - title: GUJARATI
-      payload: gujarati   
+      payload: gujarati
+  utter_ask_Name:
+  - text: Enter your name-->
+  utter_ask_PhoneNumber:
+  - text: Enter your number-->
+  utter_ask_Address:
+  - text: Enter your Address-->      
   utter_goodbye:
   - text: "Bye"
   utter_test_type: 
@@ -42,7 +84,9 @@ actions:
 - action_test_type
 - action_display_card
 - action_ask_visit
-- utter_hold_on
+- action_ask_date
+- action_show_slots
+- action_book_appointment
 
 session_config:
   session_expiration_time: 60

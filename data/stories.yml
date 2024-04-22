@@ -25,4 +25,22 @@ stories:
   - intent: Appointment_booking
   - action: action_ask_visit
   - intent: visit_type
-  - action: utter_hold_on  
+  - action: action_ask_date
+  - intent: date_query
+  - action: action_show_slots
+  - intent: time_query
+    entities:
+    - Time: "14:30:00"  
+  - action: utter_ask_Name
+  - intent: information_Name
+    entities:
+    - Name: "kutbuddin"
+  - action: utter_ask_PhoneNumber
+  - intent: information_Number
+    entities:
+    - PhoneNumber: "9856452052"
+  - action: utter_ask_Address
+  - intent: information_address
+    entities:
+    - Address: "456 Park Avenue, Townsville"
+  - action: action_book_appointment  

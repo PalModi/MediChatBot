@@ -8,6 +8,7 @@ from googletrans import Translator
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from .translator import response_further_test,test_descript
+import mysql.connector as mc
 
 language = []
 translator = Translator()
@@ -122,8 +123,8 @@ class ActionTestType(Action):
 
         return []
     
-
-
+#################################################################Book an Appointment############################################################################
+appoint = []
 class ActionAskVisit(Action):
     def name(self) -> Text:
         return "action_ask_visit"
@@ -131,9 +132,6 @@ class ActionAskVisit(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        latest_message = tracker.latest_message
-        text = latest_message.get('text', '')
-        language.append(text)
         # Example: Fetching dynamic options from an external source
         option_to_intent_mapping = {
             '🏠'+translator.translate("Home Visit", dest=f'{language[0][:2]}').text: "homevisit",
@@ -148,7 +146,69 @@ class ActionAskVisit(Action):
         # Send the message with dynamic buttons
         dispatcher.utter_message(text=f"{button_reply}", buttons=buttons)
 
-        return []    
+        return []   
+#'🩸'+translator.translate("Blood-Tests", dest=f'{language[0][:2]}').text
+class SelectLanguageText(Action):
+    def name(self) -> Text:
+        return "action_ask_date"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        latest_message = tracker.latest_message
+        text = latest_message.get('text', '')
+        appoint.append(text)
+        date_desc = translator.translate('Enter the date on which you want to book appointment',dest=f'{language[0][:2]}').text
+        dispatcher.utter_message(text=f"{date_desc}\n Enter date in dd-mm-yyyy format\nfor eg 02-05-2024")
+
+        return []
+    
+class SelectLanguageText(Action):
+    def name(self) -> Text:
+        return "action_show_slots"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        latest_message = tracker.latest_message
+        text = latest_message.get('text', '')
+        appoint.append(text)  # Split the message into words
+        # Connect to MySQL
+        db = mc.connect(
+            host="localhost",
+            user="root",
+            password="Kutub@123",
+            database="medichat"
+        )
+        cursor = db.cursor()
+        data = []
+        if appoint[0][:4] == 'home':
+            cursor.execute("SELECT slot_time FROM slots WHERE appointment_type='Home'")
+            data = cursor.fetchall()
+        elif appoint[0][:3] == 'lab':
+            cursor.execute("SELECT slot_time FROM slots WHERE appointment_type='Lab'")
+            data = cursor.fetchall()
+        buttons = []
+        for slot in data:
+            slot_time = str(slot[0])
+            buttons.append({"title": slot_time, "payload": slot_time})
+        dispatcher.utter_message(text=f"Available slots for {appoint[0]} on date: {appoint[1]}", buttons=buttons)
+        cursor.close()
+        db.close()
+        return []
+    
+class SelectLanguageText(Action):
+    def name(self) -> Text:
+        return "action_book_appointment"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        appoint.append(tracker.get_slot('Time'))  # Split the message into words
+        print(appoint)
+        name = tracker.get_slot('Name')
+        number = tracker.get_slot('PhoneNumber')
+        address = tracker.get_slot('Address')[0]
+        dispatcher.utter_message(text=f"To be Continued\n{name} {number} {address}")
+        return [] 
 #rasa run -m models --enable-api --cors "*" --debug  
-# i here by declare war on you all
-# testing in my brach
