@@ -9,10 +9,64 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from .translator import response_further_test,test_descript
 import mysql.connector as mc
+import random
 
 language = []
 translator = Translator()
 typ=[]
+
+class SelectLanguageText(Action):
+    def name(self) -> Text:
+        return "action_select_language"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        latest_message = tracker.latest_message
+        text = latest_message.get('text', '')
+        language.append(text)
+        # Example: Fetching dynamic options from an external source
+        option_to_intent_mapping = {
+            '🔬'+translator.translate("MedicalTests", dest=f'{language[0][:2]}').text: "lab_tests",
+            '📅'+translator.translate("Book An Appointment", dest=f'{language[0][:2]}').text: "Appointment_booking",
+                        # Add more mappings as needed
+        }
+        # Generate buttons dynamically
+        buttons = []
+        for option,intent_name in option_to_intent_mapping.items():
+            buttons.append({"title": option, "payload": f"/{intent_name}"})
+        button_reply = translator.translate("Please choose one of the following options: ", dest=f'{language[0][:2]}').text+'👇'
+        # Send the message with dynamic buttons
+        dispatcher.utter_message(text=f"{button_reply}", buttons=buttons)
+
+        return []
+
+#####################################################Medical test information#####################################################################    
+class ActionTestType(Action):
+
+    def name(self) -> Text:
+        return "action_test_type"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        option_to_intent_mapping = {
+            '🩸'+translator.translate("Blood-Tests", dest=f'{language[0][:2]}').text: "blood-test",
+            '💧'+translator.translate("Urine-Tests", dest=f'{language[0][:2]}').text: "urine-test",
+            '📷'+translator.translate("Imaging-Tests", dest=f'{language[0][:2]}').text: "imaging-test",
+                        # Add more mappings as needed
+        }
+        # Generate buttons dynamically
+        buttons = []
+        for option,intent_name in option_to_intent_mapping.items():
+            buttons.append({"title": option, "payload": f"{intent_name}"})
+        button_reply = translator.translate("Please choose one of the following options: ", dest=f'{language[0][:2]}').text+'👇'
+        # Send the message with dynamic buttons
+        dispatcher.utter_message(text=f"{button_reply}", buttons=buttons)
+
+        return []    
+
 class ActionConvertText(Action):
 
     def name(self) -> Text:
@@ -71,57 +125,6 @@ class ActionDisplayCard(Action):
         language.clear()
         typ.clear()
         return []
-
-class SelectLanguageText(Action):
-    def name(self) -> Text:
-        return "action_select_language"
-
-    def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        latest_message = tracker.latest_message
-        text = latest_message.get('text', '')
-        language.append(text)
-        # Example: Fetching dynamic options from an external source
-        option_to_intent_mapping = {
-            '🔬'+translator.translate("MedicalTests", dest=f'{language[0][:2]}').text: "lab_tests",
-            '📅'+translator.translate("Book An Appointment", dest=f'{language[0][:2]}').text: "Appointment_booking",
-                        # Add more mappings as needed
-        }
-        # Generate buttons dynamically
-        buttons = []
-        for option,intent_name in option_to_intent_mapping.items():
-            buttons.append({"title": option, "payload": f"/{intent_name}"})
-        button_reply = translator.translate("Please choose one of the following options: ", dest=f'{language[0][:2]}').text+'👇'
-        # Send the message with dynamic buttons
-        dispatcher.utter_message(text=f"{button_reply}", buttons=buttons)
-
-        return []
-
-class ActionTestType(Action):
-
-    def name(self) -> Text:
-        return "action_test_type"
-
-    def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        
-        option_to_intent_mapping = {
-            '🩸'+translator.translate("Blood-Tests", dest=f'{language[0][:2]}').text: "blood-test",
-            '💧'+translator.translate("Urine-Tests", dest=f'{language[0][:2]}').text: "urine-test",
-            '📷'+translator.translate("Imaging-Tests", dest=f'{language[0][:2]}').text: "imaging-test",
-                        # Add more mappings as needed
-        }
-        # Generate buttons dynamically
-        buttons = []
-        for option,intent_name in option_to_intent_mapping.items():
-            buttons.append({"title": option, "payload": f"{intent_name}"})
-        button_reply = translator.translate("Please choose one of the following options: ", dest=f'{language[0][:2]}').text+'👇'
-        # Send the message with dynamic buttons
-        dispatcher.utter_message(text=f"{button_reply}", buttons=buttons)
-
-        return []
     
 #################################################################Book an Appointment############################################################################
 appoint = []
@@ -159,7 +162,7 @@ class SelectLanguageText(Action):
         text = latest_message.get('text', '')
         appoint.append(text)
         date_desc = translator.translate('Enter the date on which you want to book appointment',dest=f'{language[0][:2]}').text
-        dispatcher.utter_message(text=f"{date_desc}\n Enter date in dd-mm-yyyy format\nfor eg 02-05-2024")
+        dispatcher.utter_message(text=f"📅{date_desc}<br>In dd-mm-yyyy format for eg 02-05-2024",parse_mode="Markdown")
 
         return []
     
@@ -182,6 +185,7 @@ class SelectLanguageText(Action):
         )
         cursor = db.cursor()
         data = []
+        
         if appoint[0][:4] == 'home':
             cursor.execute("SELECT slot_time FROM slots WHERE appointment_type='Home'")
             data = cursor.fetchall()
@@ -192,7 +196,7 @@ class SelectLanguageText(Action):
         for slot in data:
             slot_time = str(slot[0])
             buttons.append({"title": slot_time, "payload": slot_time})
-        dispatcher.utter_message(text=f"Available slots for {appoint[0]} on date: {appoint[1]}", buttons=buttons)
+        dispatcher.utter_message(text=translator.translate(f"Available slots for {appoint[0]} on date: {appoint[1]}👇",dest=f'{language[0][:2]}').text, buttons=buttons)
         cursor.close()
         db.close()
         return []
@@ -204,11 +208,38 @@ class SelectLanguageText(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        appoint.append(tracker.get_slot('Time'))  # Split the message into words
-        print(appoint)
+        appoint.append(tracker.get_slot('Time'))  
         name = tracker.get_slot('Name')
-        number = tracker.get_slot('PhoneNumber')
+        number = int(tracker.get_slot('PhoneNumber'))
         address = tracker.get_slot('Address')[0]
-        dispatcher.utter_message(text=f"To be Continued\n{name} {number} {address}")
+        random_number = random.randint(999,10000)
+
+        db = mc.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="medichat"
+        )
+        cursor = db.cursor()
+#translator.translate('Enter the date on which you want to book appointment',dest=f'{language[0][:2]}').text
+        if appoint[0][:4]=='home':
+            cursor.execute("INSERT INTO user (id,name,number,address) VALUES (%s,%s,%s,%s)",(random_number,name,int(number),address))
+            cursor.execute("INSERT INTO appointment (user_id,date,time) VALUES (%s,%s,%s)",(random_number,appoint[1],appoint[2]))
+            db.commit()
+            cursor.execute("SELECT user_id,date,time FROM user INNER JOIN appointment ON user.id = appointment.user_id WHERE user.id=%s",((random_number,)))
+            data = cursor.fetchall()
+            dispatcher.utter_message(text="✔"+translator.translate(f"The lab-testers will be arriving for 🏠 Home-visit on {data[0][1]} at {data[0][2]}<br>your <b>appointment id</b> is <b>{data[0][0]}</b> ",dest=f'{language[0][:2]}').text,parse_mode="Markdown")
+        elif appoint[0][:3]=='lab':
+            cursor.execute("INSERT INTO user (id,name,number,address) VALUES (%s,%s,%s,%s)",(random_number,name,int(number),'lab-visit'));
+            cursor.execute("INSERT INTO appointment (user_id,date,time) VALUES (%s,%s,%s)",(random_number,appoint[1],appoint[2]))
+            db.commit()   
+            cursor.execute("SELECT user_id,date,time FROM user INNER JOIN appointment ON user.id = appointment.user_id WHERE user.id=%s",((random_number,)))
+            data = cursor.fetchall()
+            dispatcher.utter_message(text="✔"+translator.translate(f"Your appointment for 🏥 Lab-visit is fixed on {data[0][1]} at {data[0][2]}<br>your <b>appointment id</b> is <b>{data[0][0]}</b> ",dest=f'{language[0][:2]}').text,parse_mode="Markdown")
+        
+        cursor.close()
+        db.close()
+        appoint.clear()
+        language.clear()
         return [] 
 #rasa run -m models --enable-api --cors "*" --debug  

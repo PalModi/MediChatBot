@@ -105,6 +105,7 @@ nlu:
 
 - intent: information_Number
   examples: |
+    - [9856452052](PhoneNumber)
     - my number is [1234567890](PhoneNumber)
     - call me at [1234567890](PhoneNumber)
     - my phone number is [+91-1234567890](PhoneNumber)
@@ -113,10 +114,21 @@ nlu:
 - intent: information_address
   examples: |
     - My address is [123 Main Street, Cityville](Address)
+    - [lab](Address)
+    - ['lab'](Address)
     - I live at [456 Park Avenue, Townsville](Address)
     - Address: [789 Oak Lane, Villageton](Address)
     - [1001 Elm Street, Suburbia](Address)
     - [22B Baker Street, London](Address)
     - [42 Wallaby Way, Sydney](Address)
     - [221B Baker Street, London](Address)
-    - [1234 Pine Street, Greenvale](Address)    
+    - [1234 Pine Street, Greenvale](Address) 
+    - [A-102, Shree Hari Residency, Chandkheda, Ahemedabad](Address)
+    - [6, Prashanti, North West Avenue, Santacruz, Mumbai](Address)
+    - [59/64 Nr Kasba Ganapat, Kasba Peth, Pune](Address)
+    - [39-A, Rajlaxmi Complex, Old Padra Road,Vadodara](Address)
+    - [123/1b North Kamalanagar, Kushaiguda, Hyderabad](Address)
+    - [Unit No 13 Mahalaxmi Indl.estate, 2nd Flr D C Rd Gandhi Nagar, Delisle Road, Mumbai](Address)
+    - [3rd Flr, Prabhat Apartments, Hanuman Road, Vile Parle(e), Mumbai](Address)
+    - [201-210, 2nd Floor, Mittal Towers,c Wing, M G Road, Banglore](Address)
+    - [Jai Moti Building, Hirachand Desai Road, Opp. New Post Office, Ghatkopar (west)](Address)   

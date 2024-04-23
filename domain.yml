@@ -36,7 +36,7 @@ slots:
     - type: from_entity
       entity: PhoneNumber
   Address:
-    type: list
+    type: text
     influence_conversation: true
     mappings:
     - type: from_entity
@@ -59,11 +59,11 @@ responses:
     - title: GUJARATI
       payload: gujarati
   utter_ask_Name:
-  - text: Enter your name-->
+  - text: "Enter your name--><br>अपना नाम दर्ज करें--><br>તમારું નામ દાખલ કરો-->"
   utter_ask_PhoneNumber:
-  - text: Enter your number-->
+  - text: "Enter your number--><br>अपना नंबर दर्ज करें--><br>તમારો નંબર દાખલ કરો-->"
   utter_ask_Address:
-  - text: Enter your Address-->      
+  - text: "Enter your Address-->[If lab visit then write 'lab']<br>अपना पता दर्ज करें -->[अगर लैब यात्रा हो तो 'lab' लिखें]<br>તમારું સરનામું દાખલ કરો --> [જો લેબ યાત્રા હોય તો 'lab' લખો]"     
   utter_goodbye:
   - text: "Bye"
   utter_test_type: 
