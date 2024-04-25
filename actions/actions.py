@@ -243,3 +243,4 @@ class SelectLanguageText(Action):
         language.clear()
         return [] 
 #rasa run -m models --enable-api --cors "*" --debug  
+#this changes is made by pal
