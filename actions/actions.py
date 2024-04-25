@@ -78,34 +78,27 @@ class ActionConvertText(Action):
         latest_message = tracker.latest_message
         text = latest_message.get('text', '')
         
-        if text=="blood-test":
-            buttons = [
-                #translator.translate("select type of blood-test :", dest=f'{language[0][:2]}').text
+        test_buttons = {
+            "blood-test": [
                 {"title": translator.translate("COMPLETE BLOOD COUNT (CBC)", dest=f'{language[0][:2]}').text, "payload": "cbc"},
                 {"title": translator.translate("RED BLOOD CELLS (RBC COUNT)", dest=f'{language[0][:2]}').text, "payload": "rbc"},
                 # Add more buttons for other blood tests as needed
-            ]
-            typ.append(text)
-            dispatcher.utter_message(text=translator.translate("select type of blood-test :", dest=f'{language[0][:2]}').text+"👇", buttons=buttons)
-        elif text=="urine-test":
-            buttons = [
-                #translator.translate("select type of blood-test :", dest=f'{language[0][:2]}').text
+            ],
+            "urine-test": [
                 {"title": translator.translate("URINE EXAMINATION, ROUTINE; URINE, R/E", dest=f'{language[0][:2]}').text, "payload": "RE"},
                 {"title": translator.translate("URINE EXAMINATION, ROUTINE; URINE R/E, AUTOMATED", dest=f'{language[0][:2]}').text, "payload": "REA"},
-                # Add more buttons for other blood tests as needed
-            ]
-            typ.append(text)
-            dispatcher.utter_message(text=translator.translate("select type of urine-test :", dest=f'{language[0][:2]}').text+"👇", buttons=buttons)
-        elif text=="imaging-test":
-            buttons = [
-                #translator.translate("select type of blood-test :", dest=f'{language[0][:2]}').text
+                # Add more buttons for other urine tests as needed
+            ],
+            "imaging-test": [
                 {"title": translator.translate("Magnetic Resonance imaging(MRI)", dest=f'{language[0][:2]}').text, "payload": "mri"},
                 {"title": translator.translate("X-ray", dest=f'{language[0][:2]}').text, "payload": "xray"},
-                # Add more buttons for other blood tests as needed
-            ]
+                # Add more buttons for other imaging tests as needed
+            ]}
+  # Check the test type and fetch corresponding buttons from the dictionary
+        if text in test_buttons:
+            buttons = test_buttons[text]
             typ.append(text)
-            dispatcher.utter_message(text=translator.translate("select type of imaging-test :", dest=f'{language[0][:2]}').text+"👇", buttons=buttons)
-        # language.clear()
+            dispatcher.utter_message(text=translator.translate(f"select type of {text} :", dest=f'{language[0][:2]}').text + "👇", buttons=buttons)
 
         return []
 
@@ -150,7 +143,7 @@ class ActionAskVisit(Action):
         dispatcher.utter_message(text=f"{button_reply}", buttons=buttons)
 
         return []   
-#'🩸'+translator.translate("Blood-Tests", dest=f'{language[0][:2]}').text
+
 class SelectLanguageText(Action):
     def name(self) -> Text:
         return "action_ask_date"
@@ -180,7 +173,7 @@ class SelectLanguageText(Action):
         db = mc.connect(
             host="localhost",
             user="root",
-            password="",
+            password="Rasa#098",
             database="medichat"
         )
         cursor = db.cursor()
@@ -217,11 +210,11 @@ class SelectLanguageText(Action):
         db = mc.connect(
             host="localhost",
             user="root",
-            password="",
+            password="Rasa#098",
             database="medichat"
         )
         cursor = db.cursor()
-#translator.translate('Enter the date on which you want to book appointment',dest=f'{language[0][:2]}').text
+
         if appoint[0][:4]=='home':
             cursor.execute("INSERT INTO user (id,name,number,address) VALUES (%s,%s,%s,%s)",(random_number,name,int(number),address))
             cursor.execute("INSERT INTO appointment (user_id,date,time) VALUES (%s,%s,%s)",(random_number,appoint[1],appoint[2]))
