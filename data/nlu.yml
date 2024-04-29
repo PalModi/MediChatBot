@@ -53,7 +53,6 @@ nlu:
     - aur test kya hai?
     - tests?
     - test?
-
 - intent: test_type
   examples: |
     - blood-test
@@ -67,32 +66,33 @@ nlu:
     - REA
     - mri
     - xray
-
 - intent: Appointment_booking
   examples: |
-    - Appointment booking 
+    - Appointment booking
     - Booking of appointment
     - अपॉइंटमेंट बुकिंग
     - એપોઇન્ટમેન્ટ બુકિંગ
-
 - intent: visit_type
   examples: |
     - homevisit
     - labvisit
-
 - intent: date_query
   examples: |
     - 01-02-2023
     - 03-01-2024
     - 12-05-2025
     - 07-08-2026
-
 - intent: time_query
   examples: |
     - [13:00:00](Time)
     - [14:30:00](Time)
     - [15:23:00](Time)
-
+- intent: time_query_second
+  examples: |
+    - 13:00:00
+    - 14:30:00
+    - 15:23:00
+    - 11:30:00
 - intent: information_Name
   examples: |
     - my name is [kutbuddin](Name)
@@ -102,7 +102,6 @@ nlu:
     - [salim](Name)
     - [kutbuddin](Name)
     - [bhavik](Name)
-
 - intent: information_Number
   examples: |
     - [9856452052](PhoneNumber)
@@ -110,7 +109,23 @@ nlu:
     - call me at [1234567890](PhoneNumber)
     - my phone number is [+91-1234567890](PhoneNumber)
     - [+1-9723427728](PhoneNumber)
-
+- intent: admin_info
+  examples: |
+    - admin
+    - ADMIN
+- intent: pwd
+  examples: |
+    - my password is abc@4563
+    - chap#8374
+    - www.6510
+    - ac#123
+    - bs.55
+    - abc@1230
+    - da.12
+- intent: add_upd_del
+  examples: |
+    - add
+    - update
 - intent: information_address
   examples: |
     - My address is [123 Main Street, Cityville](Address)
@@ -122,7 +137,7 @@ nlu:
     - [22B Baker Street, London](Address)
     - [42 Wallaby Way, Sydney](Address)
     - [221B Baker Street, London](Address)
-    - [1234 Pine Street, Greenvale](Address) 
+    - [1234 Pine Street, Greenvale](Address)
     - [A-102, Shree Hari Residency, Chandkheda, Ahemedabad](Address)
     - [6, Prashanti, North West Avenue, Santacruz, Mumbai](Address)
     - [59/64 Nr Kasba Ganapat, Kasba Peth, Pune](Address)
@@ -131,4 +146,7 @@ nlu:
     - [Unit No 13 Mahalaxmi Indl.estate, 2nd Flr D C Rd Gandhi Nagar, Delisle Road, Mumbai](Address)
     - [3rd Flr, Prabhat Apartments, Hanuman Road, Vile Parle(e), Mumbai](Address)
     - [201-210, 2nd Floor, Mittal Towers,c Wing, M G Road, Banglore](Address)
-    - [Jai Moti Building, Hirachand Desai Road, Opp. New Post Office, Ghatkopar (west)](Address)   
+    - [Jai Moti Building, Hirachand Desai Road, Opp. New Post Office, Ghatkopar (west)](Address)
+- intent: nlu_fallback
+  examples: |
+    - delete

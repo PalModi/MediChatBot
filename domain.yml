@@ -1,22 +1,25 @@
-version: "3.1"
-
+version: '3.1'
 intents:
-  - greet
-  - goodbye
-  - affirm
-  - deny
-  - lab_tests
-  - test_type
-  - test_further_type
-  - language
-  - Appointment_booking
-  - visit_type
-  - date_query
-  - time_query
-  - information_Name
-  - information_Number
-  - information_address
-
+- Appointment_booking
+- add_upd_del
+- admin_info
+- affirm
+- date_query
+- deny
+- goodbye
+- greet
+- information_Name
+- information_Number
+- information_address
+- lab_tests
+- language
+- nlu_fallback
+- pwd
+- test_further_type
+- test_type
+- time_query
+- time_query_second
+- visit_type
 entities:
 - Name
 - PhoneNumber
@@ -30,7 +33,7 @@ slots:
     - type: from_entity
       entity: Name
   PhoneNumber:
-    type: text
+    type: float
     influence_conversation: true
     mappings:
     - type: from_entity
@@ -46,11 +49,14 @@ slots:
     influence_conversation: true
     mappings:
     - type: from_entity
-      entity: Time    
-
+      entity: Time
+  is_authenticated:
+    type: bool
+    mappings:
+    - type: custom
 responses:
   utter_greet:
-  - text: "Hey! How are you? in which language would you like to have conversation?🤔"
+  - text: Hey! How are you? in which language would you like to have conversation?🤔
     buttons:
     - title: ENGLISH
       payload: english
@@ -59,15 +65,15 @@ responses:
     - title: GUJARATI
       payload: gujarati
   utter_ask_Name:
-  - text: "Enter your name--><br>अपना नाम दर्ज करें--><br>તમારું નામ દાખલ કરો-->"
+  - text: Enter your name--><br>अपना नाम दर्ज करें--><br>તમારું નામ દાખલ કરો-->
   utter_ask_PhoneNumber:
-  - text: "Enter your number--><br>अपना नंबर दर्ज करें--><br>તમારો નંબર દાખલ કરો-->"
+  - text: Enter your number--><br>अपना नंबर दर्ज करें--><br>તમારો નંબર દાખલ કરો-->
   utter_ask_Address:
-  - text: "Enter your Address-->[If lab visit then write 'lab']<br>अपना पता दर्ज करें -->[अगर लैब यात्रा हो तो 'lab' लिखें]<br>તમારું સરનામું દાખલ કરો --> [જો લેબ યાત્રા હોય તો 'lab' લખો]"     
+  - text: Enter your Address-->[If lab visit then write 'lab']<br>अपना पता दर्ज करें -->[अगर लैब यात्रा हो तो 'lab' लिखें]<br>તમારું સરનામું દાખલ કરો --> [જો લેબ યાત્રા હોય તો 'lab' લખો]
   utter_goodbye:
-  - text: "Bye"
-  utter_test_type: 
-  - text: ""
+  - text: Bye
+  utter_test_type:
+  - text: ''
     buttons:
     - title: 🩸Blood-Tests બ્લડટેસ્ટ ब्लड-टेस्ट
       payload: blood-test
@@ -76,9 +82,16 @@ responses:
     - title: 📷Imaging-Tests ઇમેજિંગ-ટેસ્ટ इमेजिंग-परीक्षण
       payload: imaging-test
   utter_hold_on:
-  - text: To be continued        
-
+  - text: To be continued
+  utter_password:
+  - text: Enter password
 actions:
+- action_add_upd_del
+- action_ask_time
+- utter_password
+- action_check_password
+- action_change_time
+- action_show_data
 - action_further_test_type
 - action_select_language
 - action_test_type
@@ -87,8 +100,6 @@ actions:
 - action_ask_date
 - action_show_slots
 - action_book_appointment
-
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true
-

@@ -6,7 +6,7 @@
 from typing import Any, Text, Dict, List
 from googletrans import Translator
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import SlotSet
+from rasa_sdk.events import SlotSet, AllSlotsReset
 from rasa_sdk.executor import CollectingDispatcher
 from .translator import response_further_test,test_descript
 import mysql.connector as mc
@@ -145,7 +145,7 @@ class ActionAskVisit(Action):
 
         return []   
 
-class SelectLanguageText(Action):
+class ActionAskDate(Action):
     def name(self) -> Text:
         return "action_ask_date"
 
@@ -160,7 +160,7 @@ class SelectLanguageText(Action):
 
         return []
     
-class SelectLanguageText(Action):
+class ActionShowSlots(Action):
     def name(self) -> Text:
         return "action_show_slots"
 
@@ -174,7 +174,7 @@ class SelectLanguageText(Action):
         db = mc.connect(
             host="localhost",
             user="root",
-            password="Rasa#098",
+            password="",
             database="medichat"
         )
         cursor = db.cursor()
@@ -195,36 +195,37 @@ class SelectLanguageText(Action):
         db.close()
         return []
     
-class SelectLanguageText(Action):
+class ActionBookAppointment(Action):
     def name(self) -> Text:
         return "action_book_appointment"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
         appoint.append(tracker.get_slot('Time'))  
         name = tracker.get_slot('Name')
-        number = int(tracker.get_slot('PhoneNumber'))
+        number = float(tracker.get_slot('PhoneNumber'))
         address = tracker.get_slot('Address')[0]
         random_number = random.randint(999,10000)
 
         db = mc.connect(
             host="localhost",
             user="root",
-            password="Rasa#098",
+            password="",
             database="medichat"
         )
         cursor = db.cursor()
 
         if appoint[0][:4]=='home':
-            cursor.execute("INSERT INTO user (id,name,number,address) VALUES (%s,%s,%s,%s)",(random_number,name,int(number),address))
+            cursor.execute("INSERT INTO user (id,name,number,address) VALUES (%s,%s,%s,%s)",(random_number,name,str(number),address))
             cursor.execute("INSERT INTO appointment (user_id,date,time) VALUES (%s,%s,%s)",(random_number,appoint[1],appoint[2]))
             db.commit()
             cursor.execute("SELECT user_id,date,time FROM user INNER JOIN appointment ON user.id = appointment.user_id WHERE user.id=%s",((random_number,)))
             data = cursor.fetchall()
             dispatcher.utter_message(text="✔"+translator.translate(f"The lab-testers will be arriving for 🏠 Home-visit on {data[0][1]} at {data[0][2]}<br>your <b>appointment id</b> is <b>{data[0][0]}</b> ",dest=f'{language[0][:2]}').text,parse_mode="Markdown")
         elif appoint[0][:3]=='lab':
-            cursor.execute("INSERT INTO user (id,name,number,address) VALUES (%s,%s,%s,%s)",(random_number,name,int(number),'lab-visit'));
+            cursor.execute("INSERT INTO user (id,name,number,address) VALUES (%s,%s,%s,%s)",(random_number,name,str(number),'lab-visit'));
             cursor.execute("INSERT INTO appointment (user_id,date,time) VALUES (%s,%s,%s)",(random_number,appoint[1],appoint[2]))
             db.commit()   
             cursor.execute("SELECT user_id,date,time FROM user INNER JOIN appointment ON user.id = appointment.user_id WHERE user.id=%s",((random_number,)))
@@ -235,21 +236,21 @@ class SelectLanguageText(Action):
         db.close()
         appoint.clear()
         language.clear()
-        return [] 
+        return [AllSlotsReset()] 
 #####################################################################Admin pannel#################################################################
 admin = []
-class SelectLanguageText(Action):
+class ActionCheckPassword(Action):
     def name(self) -> Text:
-        return "action_ask_password"
+        return "action_check_password"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
         latest_message = tracker.latest_message
-        pwd = latest_message.get('text','')
+        text = latest_message.get('text', '') 
 
-        if pwd=="1230":
+        if text=="abc@1230":
             option_to_intent_mapping = {
             "🏠Home Visit": "homevisit",
             "🏥Lab Visit": "labvisit",
@@ -263,11 +264,11 @@ class SelectLanguageText(Action):
             dispatcher.utter_message(text=f"{button_reply}", buttons=buttons)
         else:
             dispatcher.utter_message(text="Wrong password!😒")
-            return [SlotSet("password_correct", False)]
+            return [SlotSet("is_authenticated", None)]  
 
-        return [SlotSet("password_correct", True)]
+        return [SlotSet("is_authenticated",True)]
 
-class SelectLanguageText(Action):
+class ActionShowData(Action):
     def name(self) -> Text:
         return "action_show_data"
 
@@ -282,7 +283,7 @@ class SelectLanguageText(Action):
         db = mc.connect(
             host="localhost",
             user="root",
-            password="Rasa#098",
+            password="",
             database="medichat"
         )
         cursor = db.cursor()
@@ -296,100 +297,101 @@ class SelectLanguageText(Action):
             data = cursor.fetchall()
         cursor.close()
         db.close()
-        text = ""
+        data_text = "Here is the previous slots mentioned <br>"
         for i in data:
-            text+=i+'<br>'
-        dispatcher.utter_message(text=text,parse_mode="Markdown")        
+            data_text+=i[0]+"<br>"
+        dispatcher.utter_message(text=data_text,parse_mode="Markdown")        
         return []
 
 
-# class SelectLanguageText(Action):
-#     def name(self) -> Text:
-#         return "action_add_upd_del"
+class ActionAddDel(Action):
+    def name(self) -> Text:
+        return "action_add_upd_del"
 
-#     def run(self, dispatcher: CollectingDispatcher,
-#             tracker: Tracker,
-#             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-#             option_to_intent_mapping = {
-#             "✔Add": "add",
-#             "❌Delete": "delete"
-#         }
-#             # Generate buttons dynamically
-#             buttons = []
-#             for option,intent_name in option_to_intent_mapping.items():
-#                 buttons.append({"title": option, "payload": f"{intent_name}"})
-#             button_reply = "In which of the following you want change in your slots: "
-#             # Send the message with dynamic buttons
-#             dispatcher.utter_message(text=f"{button_reply}", buttons=buttons)   
+            option_to_intent_mapping = {
+            "✔Add": "add",
+            "❌Delete": "delete"
+        }
+            # Generate buttons dynamically
+            buttons = []
+            for option,intent_name in option_to_intent_mapping.items():
+                buttons.append({"title": option, "payload": f"{intent_name}"})
+            button_reply = "In which of the following you want change in your slots: "
+            # Send the message with dynamic buttons
+            dispatcher.utter_message(text=f"{button_reply}", buttons=buttons)   
 
-#             return []
+            return []
 
-# class SelectLanguageText(Action):
-#     def name(self) -> Text:
-#         return "action_ask_time"
+class ActionAskTime(Action):
+    def name(self) -> Text:
+        return "action_ask_time"
 
-#     def run(self, dispatcher: CollectingDispatcher,
-#             tracker: Tracker,
-#             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
             
-#             latest_message = tracker.latest_message
-#             text = latest_message.get('text','')
-#             admin.append(text)
+            latest_message = tracker.latest_message
+            text = latest_message.get('text','')
+            admin.append(text)
 
-#             dispatcher.utter_message(text=f"Enter the slot time which you want to {admin[1]}<br>Example: 10:00:00 <b>HH:MM:SS</b>")
+            dispatcher.utter_message(text=f"Enter the slot time which you want to {admin[1]}<br>Example: 10:00:00 <b>HH:MM:SS</b>")
 
-#             return []
+            return []
 
-# class  SelectLanguageText(Action):
-#     def name(self) -> Text:
-#         return "action_change_time"
+class  ActionChangeTime(Action):
+    def name(self) -> Text:
+        return "action_change_time"
 
-#     def run(self, dispatcher: CollectingDispatcher,
-#             tracker: Tracker,
-#             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
             
-#             latest_message = tracker.latest_message
-#             text = latest_message.get('text','')
-#             admin.append(text)
+            latest_message = tracker.latest_message
+            text = latest_message.get('text','')
+            admin.append(text)
 
-#             db = mc.connect(
-#             host="localhost",
-#             user="root",
-#             password="Rasa#098",
-#             database="medichat"
-#             )
-#             cursor = db.cursor()
+            db = mc.connect(
+            host="localhost",
+            user="root",
+            password="",
+            database="medichat"
+            )
+            cursor = db.cursor()
+            data = []
+            print(admin[2])
+            if admin[0][:4]=='home':
+                if admin[1]=='add':
+                    cursor.execute("INSERT INTO slots (slot_time,appointment_type) VALUES (%s,%s)",(admin[2],'Home',))
+                    cursor.execute("SELECT slot_time,appointment_type FROM slots WHERE appointment_type='Home'")
+                    data = cursor.fetchall()
+                    db.commit()
+                elif admin[1]=='delete':
+                    cursor.execute("DELETE FROM slots WHERE slot_time= %s ",(admin[2],))
+                    cursor.execute("SELECT slot_time,appointment_type FROM slots WHERE appointment_type='Home'")
+                    data = cursor.fetchall()
+                    db.commit()
+            elif admin[0][:3]=='lab':
+                if admin[1]=='add':
+                    cursor.execute("INSERT INTO slots (slot_time,appointment_type) VALUES (%s,%s)",(admin[2],'Lab',))
+                    cursor.execute("SELECT slot_time,appointment_type FROM slots WHERE appointment_type='lab'")
+                    data = cursor.fetchall()
+                    db.commit()
+                elif admin[1]=='delete':
+                    cursor.execute("DELETE FROM slots WHERE slot_time= %s ",(admin[2],))
+                    cursor.execute("SELECT slot_time,appointment_type FROM slots WHERE appointment_type='lab'")
+                    data = cursor.fetchall()
+                    db.commit()        
 
-#             if admin[0][:4]=='home':
-#                 if admin[1]=='add':
-#                     cursor.execute("INSERT INTO slots VALUES (%s,%s)",(admin[2],'Home'))
-#                     cursor.execute("SELECT * FROM slots WHERE appointment_type='Home'")
-#                     data = cursor.fetchall()
-#                     db.commit()
-#                 elif admin[1]=='delete':
-#                     cursor.execute("DELETE FROM slots WHERE slot_time= %s ",(admin[2],))
-#                     cursor.execute("SELECT * FROM slots WHERE appointment_type='Home'")
-#                     data = cursor.fetchall()
-#                     db.commit()
-#             elif admin[0][:3]=='lab':
-#                 if admin[1]=='add':
-#                     cursor.execute("INSERT INTO slots VALUES (%s,%s)",(admin[2],'Lab'))
-#                     cursor.execute("SELECT * FROM slots WHERE appointment_type='lab'")
-#                     data = cursor.fetchall()
-#                     db.commit()
-#                 elif admin[1]=='delete':
-#                     cursor.execute("DELETE FROM slots WHERE slot_time= %s ",(admin[2],))
-#                     cursor.execute("SELECT * FROM slots WHERE appointment_type='lab'")
-#                     data = cursor.fetchall()
-#                     db.commit()        
-
-#             cursor.close()
-#             db.close()
-#             text = "Updated Slots: <br>"
-#             for i in data:
-#                 text+="  "+i+'<br>'
-#             dispatcher.utter_message(text=text,parse_mode="Markdown")  
-#             admin.clear()      
-#             return []
+            cursor.close()
+            db.close()
+            text = "Updated Slots: <br>"
+            for i in data:
+                text+="  "+i[0]+'<br>'
+            dispatcher.utter_message(text=text,parse_mode="Markdown")  
+            admin.clear()      
+            return [SlotSet("is_authenticated", None)]
 #rasa run -m models --enable-api --cors "*" --debug  

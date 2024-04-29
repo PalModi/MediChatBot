@@ -38,25 +38,56 @@ stories:
   - action: utter_ask_PhoneNumber
   - intent: information_Number
     entities:
-    - PhoneNumber: "9856452052"
+    - PhoneNumber: 9856452052
   - action: utter_ask_Address
   - intent: information_address
     entities:
     - Address: "456 Park Avenue, Townsville"
   - action: action_book_appointment  
 
-# - story: Admin pannel 
-#   steps:
-#   - intent: admin_info
-#   - action: utter_ask_password
-#   - intent: pwd
-#   - action: action_ask_password
-#   - slot_was_set:
-#     - password_correct: true
-#   - intent: visit_type
-#   - action: action_show_data
-#   - action: action_add_upd_del
-#   - intent: add_upd_del
-#   - action: action_ask_time
-#   - intent: time_query
-#   - action: action_change_time
+- story: Admin pannel 
+  steps:
+  - intent: admin_info
+  - action: utter_password
+  - intent: pwd  
+  - action: action_check_password
+  - slot_was_set:
+    - is_authenticated: true
+  - intent: visit_type
+  - action: action_show_data
+  - action: action_add_upd_del
+  - intent: add_upd_del
+  - action: action_ask_time
+  - intent: time_query_second
+  - action: action_change_time
+
+- story: interactive_story_1
+  steps:
+  - intent: admin_info
+  - action: utter_password
+  - intent: pwd
+  - action: action_check_password
+  - action: action_check_password
+  - slot_was_set:
+    - is_authenticated: true
+  - intent: visit_type
+  - action: action_show_data
+  - action: action_add_upd_del
+  - intent: nlu_fallback
+  - action: action_ask_time
+  - intent: time_query_second
+    entities:
+    - Time: 11:30:00
+  - slot_was_set:
+    - Time: 11:30:00
+  - intent: time_query_second
+  - action: action_change_time
+  - action: action_change_time
+  - action: action_change_time
+  - intent: greet
+  - intent: admin_info
+  - action: utter_password
+  - intent: pwd
+  - action: action_check_password
+  - slot_was_set:
+    - is_authenticated: false
