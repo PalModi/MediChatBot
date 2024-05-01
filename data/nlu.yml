@@ -89,10 +89,10 @@ nlu:
     - [15:23:00](Time)
 - intent: time_query_second
   examples: |
-    - 13:00:00
-    - 14:30:00
-    - 15:23:00
-    - 11:30:00
+    - 13:00
+    - 14:30
+    - 15:23
+    - 11:30
 - intent: information_Name
   examples: |
     - my name is [kutbuddin](Name)
@@ -126,6 +126,7 @@ nlu:
   examples: |
     - add
     - update
+    - delete
 - intent: information_address
   examples: |
     - My address is [123 Main Street, Cityville](Address)
@@ -147,6 +148,3 @@ nlu:
     - [3rd Flr, Prabhat Apartments, Hanuman Road, Vile Parle(e), Mumbai](Address)
     - [201-210, 2nd Floor, Mittal Towers,c Wing, M G Road, Banglore](Address)
     - [Jai Moti Building, Hirachand Desai Road, Opp. New Post Office, Ghatkopar (west)](Address)
-- intent: nlu_fallback
-  examples: |
-    - delete

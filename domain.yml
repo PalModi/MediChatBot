@@ -13,7 +13,6 @@ intents:
 - information_address
 - lab_tests
 - language
-- nlu_fallback
 - pwd
 - test_further_type
 - test_type
@@ -33,7 +32,7 @@ slots:
     - type: from_entity
       entity: Name
   PhoneNumber:
-    type: float
+    type: text
     influence_conversation: true
     mappings:
     - type: from_entity
@@ -85,6 +84,9 @@ responses:
   - text: To be continued
   utter_password:
   - text: Enter password
+  utter_nlu_fallback:
+  - text: I didn't understand that. Can you please rephrase or provide more information?
+  - text: Sorry i didn't get it could you rephrase
 actions:
 - action_add_upd_del
 - action_ask_time

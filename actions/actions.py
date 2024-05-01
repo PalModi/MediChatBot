@@ -174,7 +174,7 @@ class ActionShowSlots(Action):
         db = mc.connect(
             host="localhost",
             user="root",
-            password="",
+            password="Rasa#098",
             database="medichat"
         )
         cursor = db.cursor()
@@ -205,20 +205,20 @@ class ActionBookAppointment(Action):
         
         appoint.append(tracker.get_slot('Time'))  
         name = tracker.get_slot('Name')
-        number = float(tracker.get_slot('PhoneNumber'))
+        number = str(tracker.get_slot('PhoneNumber'))
         address = tracker.get_slot('Address')[0]
         random_number = random.randint(999,10000)
-
+        print(number)
         db = mc.connect(
             host="localhost",
             user="root",
-            password="",
+            password="Rasa#098",
             database="medichat"
         )
         cursor = db.cursor()
 
         if appoint[0][:4]=='home':
-            cursor.execute("INSERT INTO user (id,name,number,address) VALUES (%s,%s,%s,%s)",(random_number,name,str(number),address))
+            cursor.execute("INSERT INTO user (id,name,number,address) VALUES (%s,%s,%s,%s)",(random_number,name,number,address))
             cursor.execute("INSERT INTO appointment (user_id,date,time) VALUES (%s,%s,%s)",(random_number,appoint[1],appoint[2]))
             db.commit()
             cursor.execute("SELECT user_id,date,time FROM user INNER JOIN appointment ON user.id = appointment.user_id WHERE user.id=%s",((random_number,)))
@@ -236,7 +236,7 @@ class ActionBookAppointment(Action):
         db.close()
         appoint.clear()
         language.clear()
-        return [AllSlotsReset()] 
+        return [AllSlotsReset() ] 
 #####################################################################Admin pannel#################################################################
 admin = []
 class ActionCheckPassword(Action):
@@ -247,9 +247,8 @@ class ActionCheckPassword(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        latest_message = tracker.latest_message
-        text = latest_message.get('text', '') 
-
+        text = tracker.latest_message.get('text', '').strip()
+        print(text)
         if text=="abc@1230":
             option_to_intent_mapping = {
             "🏠Home Visit": "homevisit",
@@ -262,11 +261,11 @@ class ActionCheckPassword(Action):
             button_reply = "In which of the following you want to change slots: "
             # Send the message with dynamic buttons
             dispatcher.utter_message(text=f"{button_reply}", buttons=buttons)
+            return [SlotSet("is_authenticated",True)]
         else:
             dispatcher.utter_message(text="Wrong password!😒")
-            return [SlotSet("is_authenticated", None)]  
+            return [SlotSet("is_authenticated",False)]
 
-        return [SlotSet("is_authenticated",True)]
 
 class ActionShowData(Action):
     def name(self) -> Text:
@@ -283,7 +282,7 @@ class ActionShowData(Action):
         db = mc.connect(
             host="localhost",
             user="root",
-            password="",
+            password="Rasa#098",
             database="medichat"
         )
         cursor = db.cursor()
@@ -338,7 +337,7 @@ class ActionAskTime(Action):
             text = latest_message.get('text','')
             admin.append(text)
 
-            dispatcher.utter_message(text=f"Enter the slot time which you want to {admin[1]}<br>Example: 10:00:00 <b>HH:MM:SS</b>")
+            dispatcher.utter_message(text=f"Enter the slot time which you want to {admin[1]}<br>Example: 10:00 <b>HH:MM</b>")
 
             return []
 
@@ -357,7 +356,7 @@ class  ActionChangeTime(Action):
             db = mc.connect(
             host="localhost",
             user="root",
-            password="",
+            password="Rasa#098",
             database="medichat"
             )
             cursor = db.cursor()
@@ -365,23 +364,23 @@ class  ActionChangeTime(Action):
             print(admin[2])
             if admin[0][:4]=='home':
                 if admin[1]=='add':
-                    cursor.execute("INSERT INTO slots (slot_time,appointment_type) VALUES (%s,%s)",(admin[2],'Home',))
+                    cursor.execute("INSERT INTO slots (slot_time,appointment_type) VALUES (%s,%s)",(admin[2]+":00",'Home',))
                     cursor.execute("SELECT slot_time,appointment_type FROM slots WHERE appointment_type='Home'")
                     data = cursor.fetchall()
                     db.commit()
                 elif admin[1]=='delete':
-                    cursor.execute("DELETE FROM slots WHERE slot_time= %s ",(admin[2],))
+                    cursor.execute("DELETE FROM slots WHERE slot_time= %s ",(admin[2]+":00",))
                     cursor.execute("SELECT slot_time,appointment_type FROM slots WHERE appointment_type='Home'")
                     data = cursor.fetchall()
                     db.commit()
             elif admin[0][:3]=='lab':
                 if admin[1]=='add':
-                    cursor.execute("INSERT INTO slots (slot_time,appointment_type) VALUES (%s,%s)",(admin[2],'Lab',))
+                    cursor.execute("INSERT INTO slots (slot_time,appointment_type) VALUES (%s,%s)",(admin[2]+":00",'Lab',))
                     cursor.execute("SELECT slot_time,appointment_type FROM slots WHERE appointment_type='lab'")
                     data = cursor.fetchall()
                     db.commit()
                 elif admin[1]=='delete':
-                    cursor.execute("DELETE FROM slots WHERE slot_time= %s ",(admin[2],))
+                    cursor.execute("DELETE FROM slots WHERE slot_time= %s ",(admin[2]+":00",))
                     cursor.execute("SELECT slot_time,appointment_type FROM slots WHERE appointment_type='lab'")
                     data = cursor.fetchall()
                     db.commit()        
@@ -394,4 +393,5 @@ class  ActionChangeTime(Action):
             dispatcher.utter_message(text=text,parse_mode="Markdown")  
             admin.clear()      
             return [SlotSet("is_authenticated", None)]
+    
 #rasa run -m models --enable-api --cors "*" --debug  
