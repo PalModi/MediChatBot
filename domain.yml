@@ -19,6 +19,10 @@ intents:
 - time_query
 - time_query_second
 - visit_type
+- lab_tests1
+- Appointment_booking1
+- testtype_change
+
 entities:
 - Name
 - PhoneNumber
@@ -49,10 +53,7 @@ slots:
     mappings:
     - type: from_entity
       entity: Time
-  is_authenticated:
-    type: bool
-    mappings:
-    - type: custom
+
 responses:
   utter_greet:
   - text: Hey! How are you? in which language would you like to have conversation?🤔
@@ -84,6 +85,8 @@ responses:
   - text: To be continued
   utter_password:
   - text: Enter password
+  utter_ask_testtype_change:
+  - text: "Choose one of the alphabet:<br> a. Blood-test<br> b. Urine-test<br> c. Imaging-test "
   utter_nlu_fallback:
   - text: I didn't understand that. Can you please rephrase or provide more information?
   - text: Sorry i didn't get it could you rephrase
@@ -102,6 +105,9 @@ actions:
 - action_ask_date
 - action_show_slots
 - action_book_appointment
+- action_get_selected_test_details
+- action_booking_change
+
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true

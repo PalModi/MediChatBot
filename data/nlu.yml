@@ -53,6 +53,12 @@ nlu:
     - aur test kya hai?
     - tests?
     - test?
+- intent: lab_tests1
+  examples: |
+    - aur test kya hai?
+    - change tests?
+    - change test?
+
 - intent: test_type
   examples: |
     - blood-test
@@ -72,6 +78,19 @@ nlu:
     - Booking of appointment
     - अपॉइंटमेंट बुकिंग
     - એપોઇન્ટમેન્ટ બુકિંગ
+
+- intent: Appointment_booking1
+  examples: |
+    - Appointment booking change
+    - change Booking of appointment 
+
+- intent: testtype_change
+  examples: |
+    - a
+    - b
+    - c
+    - a.
+    
 - intent: visit_type
   examples: |
     - homevisit
@@ -130,6 +149,7 @@ nlu:
 - intent: information_address
   examples: |
     - My address is [123 Main Street, Cityville](Address)
+    - lab 
     - [lab](Address)
     - ['lab'](Address)
     - I live at [456 Park Avenue, Townsville](Address)
@@ -147,4 +167,4 @@ nlu:
     - [Unit No 13 Mahalaxmi Indl.estate, 2nd Flr D C Rd Gandhi Nagar, Delisle Road, Mumbai](Address)
     - [3rd Flr, Prabhat Apartments, Hanuman Road, Vile Parle(e), Mumbai](Address)
     - [201-210, 2nd Floor, Mittal Towers,c Wing, M G Road, Banglore](Address)
-    - [Jai Moti Building, Hirachand Desai Road, Opp. New Post Office, Ghatkopar (west)](Address)
+    - [Jai Moti Building, Hirachand Desai Road, Opp. New Post Office, Ghatkopar (west)](Address)    
