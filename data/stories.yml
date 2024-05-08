@@ -57,7 +57,15 @@ stories:
   - action: utter_ask_testtype_change
   - intent: testtype_change
   - action: action_get_selected_test_details
-
+  - checkpoint: checkpoint_admin_select_triggered
+  - intent: t_f_t
+  - action: action_testtype_details_askchange
+  - checkpoint: checkpoint_admin_ask_change_triggered
+  - intent: testtype_change
+  - action: action_testtype_asktypechange
+  - checkpoint: checkpoint_admin_type_testchange_triggered
+  - intent: provide_information
+  - action: action_testinformation_change
 
 
 - story: Admin pannel for changing slots

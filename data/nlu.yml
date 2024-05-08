@@ -72,6 +72,16 @@ nlu:
     - REA
     - mri
     - xray
+- intent: t_f_t
+  examples: |
+    - CBC
+    - cbc
+    - rbc
+    - RE
+    - REA
+    - mri
+    - xray
+
 - intent: Appointment_booking
   examples: |
     - Appointment booking
@@ -90,6 +100,8 @@ nlu:
     - b
     - c
     - a.
+    - c
+    - f. g.
     
 - intent: visit_type
   examples: |
@@ -168,3 +180,16 @@ nlu:
     - [3rd Flr, Prabhat Apartments, Hanuman Road, Vile Parle(e), Mumbai](Address)
     - [201-210, 2nd Floor, Mittal Towers,c Wing, M G Road, Banglore](Address)
     - [Jai Moti Building, Hirachand Desai Road, Opp. New Post Office, Ghatkopar (west)](Address)    
+
+- intent: provide_information
+  examples: |
+    - *
+    - Test cbc rbc mri RE
+    - blood-test urine-test imaging-test
+    - 120.00
+    - No special preparation required
+    - URINE EXAMINATION, ROUTINE; URINE R/E, AUTOMATED
+    - CBC provides information about red cells, white cells and platelets
+    - Daily
+    - Weekly
+    - Some precautinary treatment required

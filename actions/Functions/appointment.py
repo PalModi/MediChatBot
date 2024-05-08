@@ -1,11 +1,12 @@
 from typing import Any, Text, Dict, List
 from googletrans import Translator
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import SlotSet, AllSlotsReset
+from rasa_sdk.events import  AllSlotsReset
 from rasa_sdk.executor import CollectingDispatcher
 import mysql.connector as mc
 import random
 from .test_information import language
+from .translator import database_cred
 
 translator = Translator()
 appoint = []
@@ -58,12 +59,7 @@ class ActionShowSlots(Action):
         text = latest_message.get('text', '')
         appoint.append(text)  # Split the message into words
         # Connect to MySQL
-        db = mc.connect(
-            host="localhost",
-            user="root",
-            password="Rasa#098",
-            database="medichat"
-        )
+        db = database_cred(mc)
         cursor = db.cursor()
         data = []
         
@@ -95,12 +91,7 @@ class ActionBookAppointment(Action):
         number = str(tracker.get_slot('PhoneNumber'))
         address = tracker.get_slot('Address')[0]
         random_number = random.randint(999,10000)
-        db = mc.connect(
-            host="localhost",
-            user="root",
-            password="Rasa#098",
-            database="medichat"
-        )
+        db = database_cred(mc)
         cursor = db.cursor()
 
         if appoint[0][:4]=='home':

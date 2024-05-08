@@ -29,6 +29,6 @@ def database_cred(mc):
             database="medichat"
         )
         return db
-print(__package__)
+# print(__package__)
 
 # def test_buttons()   

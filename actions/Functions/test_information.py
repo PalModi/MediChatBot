@@ -1,10 +1,8 @@
 from typing import Any, Text, Dict, List
 from googletrans import Translator
 from rasa_sdk import Action, Tracker
-from rasa_sdk.events import SlotSet, AllSlotsReset
 from rasa_sdk.executor import CollectingDispatcher
 from .translator import response_further_test,test_descript,database_cred
-
 
 language = []
 translator = Translator()
