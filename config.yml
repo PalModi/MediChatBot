@@ -18,7 +18,6 @@ pipeline:
   - name: RegexFeaturizer
   - name: LexicalSyntacticFeaturizer
   - name: CountVectorsFeaturizer
-  - name: CountVectorsFeaturizer
     analyzer: char_wb
     min_ngram: 1
     max_ngram: 4
@@ -42,9 +41,9 @@ policies:
   - name: MemoizationPolicy
   - name: RulePolicy
   - name: UnexpecTEDIntentPolicy
-    max_history: 16
+    max_history: 19
     epochs: 100
   - name: TEDPolicy
-    max_history: 16
+    max_history: 19
     epochs: 100
     constrain_similarities: true

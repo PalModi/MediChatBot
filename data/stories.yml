@@ -8,8 +8,6 @@ stories:
   - action: utter_greet
   - intent: language
   - action: action_select_language
-  # - intent: user_query_intent
-
 
 - story: Asking for medical-tests information
   steps:
@@ -44,3 +42,66 @@ stories:
     entities:
     - Address: "456 Park Avenue, Townsville"
   - action: action_book_appointment  
+
+- story: Admin pannel 
+  steps:
+  - intent: admin_info
+  - action: utter_password
+  - intent: pwd  
+  - action: action_check_password
+
+
+- story: Admin pannel for changing test information
+  steps:
+  - intent: lab_tests1
+  - action: utter_ask_testtype_change
+  - intent: testtype_change
+  - action: action_get_selected_test_details
+  - checkpoint: checkpoint_admin_select_triggered
+  - intent: t_f_t
+  - action: action_testtype_details_askchange
+  - checkpoint: checkpoint_admin_ask_change_triggered
+  - intent: testtype_change
+  - action: action_testtype_asktypechange
+  - checkpoint: checkpoint_admin_type_testchange_triggered
+  - intent: provide_information
+  - action: action_testinformation_change
+
+
+- story: Admin pannel for changing slots
+  steps:
+  - intent: Appointment_booking1
+  - action: action_booking_change
+  - intent: visit_type
+  - action: action_show_data
+  - action: action_add_upd_del
+  - intent: add_upd_del
+  - action: action_ask_time
+  - intent: time_query_second
+  - action: action_change_time
+
+# - story: interactive_story_1
+#   steps:
+#   - intent: admin_info
+#   - action: utter_password
+#   - intent: pwd
+#   - action: action_check_password
+#   - action: action_check_password
+#   - slot_was_set:
+#     - is_authenticated: true
+#   - intent: visit_type
+#   - action: action_show_data
+#   - action: action_add_upd_del
+#   - intent: nlu_fallback
+#   - action: action_ask_time
+#   - intent: time_query_second
+#   - action: action_change_time
+#   - action: action_change_time
+#   - action: action_change_time
+#   - intent: greet
+#   - intent: admin_info
+#   - action: utter_password
+#   - intent: pwd
+#   - action: action_check_password
+#   - slot_was_set:
+#     - is_authenticated: false
