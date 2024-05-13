@@ -9,7 +9,6 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.events import SlotSet, AllSlotsReset
 from rasa_sdk.executor import CollectingDispatcher
 import mysql.connector as mc
-import random
 
 from .Functions.translator import database_cred
 from .Functions.test_information import SelectLanguageText,ActionConvertText,ActionDisplayCard,language
@@ -18,9 +17,9 @@ from .Functions.appointment import ActionAskVisit,ActionAskDate,ActionShowSlots,
 translator = Translator()
 #####################################################Medical test information#####################################################################       
 
-#################################################################Book an Appointment############################################################################
+#####################################################Book an Appointment##########################################################################
 
-#####################################################################Admin pannel#################################################################
+#####################################################Admin pannel#################################################################################
 admin = []    
 admin_test=[]
 class ActionCheckPassword(Action):
@@ -149,7 +148,6 @@ class AdminSelectTestTypeChange(Action):
             query = f"SELECT {col} FROM test INNER JOIN card ON test.test_type_type = card.test_t_t WHERE test_type_type = %s"
             cursor.execute(query, (admin_test[1],)) 
             data = cursor.fetchall()
-            print(data)
             db.commit()
             dispatcher.utter_message(text=f"Previouslt it was written {data[0][0]}")
             dispatcher.utter_message(text="What you want to edit in it just write down.👇")
